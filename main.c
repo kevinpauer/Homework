@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <math.h>
 #include "functionBib.h"
 #include "newton.c"
 #define MAX_ITERATIONS 100
@@ -17,13 +16,14 @@ int main()
     printf("Do you want to test the analytic or numeric option?: \n");
     scanf("%d", &choice);
     
-    //getting x
+    //getting x from user
     double x;
     printf("Which x do you want to work with: \n");
     scanf("%lf", &x);
 
     double count;
 
+    //setting the pointer for functions
     double (*funcP)(double);
     funcP = &function;
 
@@ -33,6 +33,7 @@ int main()
     double (*numDeriP)(double);
     numDeriP=&functionNumDiff;
 
+    //using the specified case
     if (choice==1)
     {
         result = newton(count, MAX_ITERATIONS, x, funcP, deriP);
@@ -46,8 +47,7 @@ int main()
     }
 
     printf("Result: %lf\n", result);
-    printf("Number of iterations: %lf\n", count);
-    
+
     return 0;
 }
 

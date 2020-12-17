@@ -5,8 +5,7 @@ double newton(double count, double MAX_ITERATIONS, double x, double (*func)(doub
     double x2;
     while (count<=MAX_ITERATIONS)
     {
-        //function for filtering out x2
-        
+        //filtering out x2 with the help of funciton pointers
         x2 = x - func(x)/funcDeri(x);
 
         printf("%.10lf  ", x);
