@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include "functionBib.h"
+#include "newton.c"
 #define MAX_ITERATIONS 100
 
-int main(int argc, char const *argv[])
+int main()
 {
     int choice;
+    double result;
 
     //User interface
     printf("Newton-Raphson-Calculator \n \n");
@@ -20,38 +22,32 @@ int main(int argc, char const *argv[])
     printf("Which x do you want to work with: \n");
     scanf("%lf", &x);
 
-    int count;
-    double x2;
+    double count;
 
-    //while loop with limiter
-    while (count<=MAX_ITERATIONS)
+    double (*funcP)(double);
+    funcP = &function;
+
+    double (*deriP)(double);
+    deriP = &functionDeri;
+
+    double (*numDeriP)(double);
+    numDeriP=&functionNumDiff;
+
+    if (choice==1)
     {
-        //function for filtering out x2
-        if (choice==1)
-        {
-            x2 = x - function(x)/functionDeri(x);
-        } else
-        {
-            x2 = x - function(x)/functionNumDiff(x);
-        }
-        
-    
-        printf("%.10lf  ", x2);
-        printf("%.10lf \n", x);
-
-        //ending of while loop
-        if (fabs(x2 - x)<pow(10, -10) || count==MAX_ITERATIONS)
-        {
-            printf("Result: %lf \n", x2);
-            printf("Number of iterations: %d\n", count);
-            return 0;
-        } else
-        {
-            //setting x=x2 to get a more accurate result
-            x=x2;
-            count++;
-        }
+        result = newton(count, MAX_ITERATIONS, x, funcP, deriP);
+    } else if (choice==2)
+    {
+        result = newton(count, MAX_ITERATIONS, x, funcP, numDeriP);
+    } else
+    {
+        printf("Choice not valid, please try again! \n");
+        return 0;
     }
+
+    printf("Result: %lf\n", result);
+    printf("Number of iterations: %lf\n", count);
+    
     return 0;
 }
 
