@@ -2,59 +2,8 @@
 #include "functionBib.h"
 #include "numericDeri.h"
 #include <math.h>
+#include "newton.c"
 #define MAX_ITERATIONS 100
-
-double newtonAnalytic(double x, double (*func)(double), double (*funcDeri)(double)){
-    double count;
-    double x2;
-    while (count<=MAX_ITERATIONS)
-    {
-        //filtering out x2 with the help of funciton pointers
-        x2 = x - func(x)/funcDeri(x);
-
-        printf("%.10lf ", x);
-        printf("%.10lf iteration: %.2lf \n", x2, count+1);
-
-        //ending of while loop
-        if (fabs(x2 - x)<pow(10, -10) || count==MAX_ITERATIONS)
-        {
-            printf("Number of iterations: %.2lf\n", count+1);
-            break;
-        } else
-        {
-            //setting x=x2 to get a more accurate result
-            x=x2;
-            count++;
-        }
-    }
-    return x2;
-}
-
-double newtonNumeric(double x, double (*func)(double), double (*funcDeri)(double(*function)(double),double)){
-    double count;
-    double x2;
-    while (count<=MAX_ITERATIONS)
-    {
-        //filtering out x2 with the help of funciton pointers
-        x2 = x - func(x)/funcDeri(func,x);
-
-        printf("%.10lf ", x);
-        printf("%.10lf iteration: %.2lf \n", x2, count+1);
-
-        //ending of while loop
-        if (fabs(x2 - x)<pow(10, -10) || count==MAX_ITERATIONS)
-        {
-            printf("Number of iterations: %.2lf\n", count+1);
-            break;
-        } else
-        {
-            //setting x=x2 to get a more accurate result
-            x=x2;
-            count++;
-        }
-    }
-    return x2;
-}
 
 int main()
 {
@@ -80,17 +29,17 @@ int main()
 
     double (*analyticDeriP)(double);
     analyticDeriP = &functionAnalyticDeri;
-
-    double (*numDeriP)(double(*)(double),double);
-    numDeriP=&functionNumericDeri(function(x));
+    
+    double (*numDeriP)(double (*)(double), double);
+    numDeriP=&functionNumericDeri;
 
     //using the specified case
     if (choice==1)
     {
-        result = newtonAnalytic(x, funcP, analyticDeriP);
+        result = newtonAnalytic(MAX_ITERATIONS, x, funcP, analyticDeriP);
     } else if (choice==2)
     {
-        result = newtonNumeric(x, funcP, numDeriP);
+        result = newtonNumeric(MAX_ITERATIONS, x, funcP, numDeriP);
     } else
     {
         printf("Choice not valid, please try again! \n");
