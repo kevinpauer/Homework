@@ -1,4 +1,5 @@
 #include <math.h>
+#include "numericDeri.h"
 
 //fs(x)=(f(x+h)-f(x))/h
 double functionNumericDeri(double(*function)(double),double x){

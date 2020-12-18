@@ -5,6 +5,4 @@ double function(double);
 
 double functionAnalyticDeri(double);
 
-double functionNumericDeri(double);
-
 #endif

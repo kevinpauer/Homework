@@ -1,6 +1,3 @@
-#ifndef FUNCTIONBIB_H_
-#define FUNCTIONBIB_H_
+#pragma once
 
-double functionNumericDeri(double(*)(double(*)(double)), double);
-
-#endif
+double functionNumericDeri(double(*)(double),double);
