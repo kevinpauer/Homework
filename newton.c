@@ -2,7 +2,7 @@
 #include <math.h>
 
 double newtonAnalytic(double MAX_ITERATIONS, double x, double (*func)(double), double (*funcDeri)(double)){
-    double count;
+    double count = 0; // fixed garbage output by initialize with zero
     double holder;
     while (count<=MAX_ITERATIONS)
     {
@@ -34,7 +34,7 @@ double newtonAnalytic(double MAX_ITERATIONS, double x, double (*func)(double), d
 }
 
 double newtonNumeric(double MAX_ITERATIONS, double x, double (*func)(double), double (*funcDeri)(double(*function)(double),double)){
-    double count;
+    double count = 0;
     double holder;
     
     while (count<=MAX_ITERATIONS)
@@ -65,3 +65,7 @@ double newtonNumeric(double MAX_ITERATIONS, double x, double (*func)(double), do
     }
     return holder;
 }
+/* 
+ * total: 9/10 
+ * not initializing count to zero leads to program crash (garbage output): (-1pkt)
+ */ 
