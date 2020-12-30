@@ -31,27 +31,30 @@ void printList(listElement *start){
 
     /* YOUR CODE HERE */
     listElement * currElem = start;
+    int counter, position;
+
+    printf("------------------------------\n");
     //check if there are elements added, that can be printed
     if (currElem->nextElem == NULL)
     {
-        printf("\nNO NEW ELEMENT ADDED!\n");
+        printf("\nNO NEW ELEMENT ADDED!\n\n");
         return;
     } 
 
-    //count is relevant for future deletion of the object
-    int count = 0;
+    //counter is relevant for future deletion of the object
+    counter = getLenOfList(start);
 
-    while (currElem->nextElem != NULL)
-    { 
+    for (int i = 0; i < counter; i++)
+    {
         currElem = currElem->nextElem;
-        printf("%d) %s ",count+1, currElem->lastName);
+        printf("%d) %s ",position+1, currElem->lastName);
         printf("%s ", currElem->firstName);
         printf("%d\n", currElem->age);
-        count++;
+        position++;
     }
+
+    printf("------------------------------\n");
     /* ---------------*/
-
-
 }
 
 void delListElem(listElement **start){
@@ -59,6 +62,11 @@ void delListElem(listElement **start){
     /* YOUR CODE HERE */
     int pos;
     listElement * temp = *start;
+    if (temp->nextElem == NULL)
+    {
+        printf("\nNO ELEMENT TO DELETE!\n\n");
+        return;
+    } 
     listElement * next = temp->nextElem->nextElem; 
 
     printf("Löschen des Elements mit der Position: \n--> ");
@@ -123,6 +131,7 @@ void saveList(listElement *start){
 
     /* YOUR CODE HERE */
     char filename[50];
+    int counter;
     FILE *f;
     listElement * currElem = start;
 
@@ -131,13 +140,16 @@ void saveList(listElement *start){
 
     f = fopen(filename, "w");
 
+    counter=getLenOfList(start);
+
     //if filepointer is not NULL then print all elements of the list in the .txt file
     if (f == NULL) {
         printf("Error with filePointer\n");
     } else
     {
         currElem = currElem->nextElem;
-        while (currElem!=NULL)
+
+        for (int i = 0; i < counter; i++)
         {
             fprintf(f, "%s %s %d\n", currElem->lastName, currElem->firstName,currElem->age);
             currElem=currElem->nextElem;
@@ -182,7 +194,7 @@ void loadList(listElement *start){
             break;
         }
     }
-
+    
     fclose(f);
     /* ---------------*/
 
