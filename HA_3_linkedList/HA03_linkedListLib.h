@@ -54,7 +54,7 @@ void printList(listElement *);
  
     \param[in]  pointer to start element of current list              
 */
-void delListElem(listElement **);
+void delListElem(listElement *);
 
 /** 
     \FUNCTION: delList
@@ -67,7 +67,7 @@ void delListElem(listElement **);
  
     \param[in]  pointer to start element of current list              
 */
-void delList(listElement **);
+void delList(listElement *);
 
 /** 
     \FUNCTION: getLenOfList

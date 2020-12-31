@@ -41,12 +41,6 @@ int main(){
 
     int FLAGG = 1;
     while (FLAGG){
-        
-        //if list was deleted
-        if (start==NULL)
-        {
-            return 0;
-        }
     
         printf("1... print list\n");
         printf("2... add element\n");
@@ -63,8 +57,8 @@ int main(){
         switch (FLAGG){
             case 1: printList(start); break;
             case 2: addListElem(start); break;
-            case 3: delListElem(&start); break;
-            case 4: delList(&start); break;
+            case 3: delListElem(start); break;
+            case 4: delList(start); break;
 			case 5: saveList(start); break;
 			case 6: loadList(start); break;
             case 7: sortList(start); break;

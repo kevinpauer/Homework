@@ -3,224 +3,280 @@
 #include <string.h>
 #include "HA03_linkedListLib.h"
 
-void addListElem(listElement *start){
-    
-    listElement * new;
-    new = (listElement *)malloc(sizeof(listElement));
-    if (new == NULL) {
-        printf("can't reserve storage.\n"); 
-        return;
-        }
+void addListElem(listElement *start)
+{
 
-    listElement * currElem = start;
-    while (currElem->nextElem != NULL) currElem = currElem->nextElem;// get last elem in list
-    currElem->nextElem = new; // add new to the end of list
+    listElement *new;
+    new = (listElement *)malloc(sizeof(listElement));
+    if (new == NULL)
+    {
+        printf("can't reserve storage.\n");
+        return;
+    }
+
+    listElement *currElem = start;
+    while (currElem->nextElem != NULL)
+        currElem = currElem->nextElem; // get last elem in list
+    currElem->nextElem = new;          // add new to the end of list
     new->nextElem = NULL;
-    
+
     /* fill data in new element */
     printf("Please enter last name: \n");
-    scanf("%s",new->lastName);
+    scanf("%s", new->lastName);
     printf("Please enter first name: \n");
-    scanf("%s",new->firstName);
+    scanf("%s", new->firstName);
     printf("Please enter age: \n");
-    scanf("%d",&(new->age));
+    scanf("%d", &(new->age));
     printf("end of function\n");
 }
 
-void printList(listElement *start){
-
+void printList(listElement *start)
+{
     /* YOUR CODE HERE */
-    listElement * currElem = start;
-    int counter, position;
+    listElement *currElem = start;
+    int counter = 0;
+    int position = 1;
 
     printf("------------------------------\n");
     //check if there are elements added, that can be printed
     if (currElem->nextElem == NULL)
     {
-        printf("\nNO NEW ELEMENT ADDED!\n\n");
+        printf("\nLIST IS EMPTY, PLEASE ADD AN ELEMENT!\n\n");
         return;
-    } 
-
+    }
     //counter is relevant for future deletion of the object
+    //to see position
     counter = getLenOfList(start);
-
     for (int i = 0; i < counter; i++)
     {
         currElem = currElem->nextElem;
-        printf("%d) %s ",position+1, currElem->lastName);
+        printf("%d) %s ", position, currElem->lastName);
         printf("%s ", currElem->firstName);
         printf("%d\n", currElem->age);
         position++;
     }
-
     printf("------------------------------\n");
     /* ---------------*/
 }
 
-void delListElem(listElement **start){
+void delListElem(listElement *start)
+{
 
     /* YOUR CODE HERE */
-    int pos;
-    listElement * temp = *start;
-    if (temp->nextElem == NULL)
+    int elemPosToDel;
+    printList(start);
+
+    if (start->nextElem!=NULL)
     {
-        printf("\nNO ELEMENT TO DELETE!\n\n");
-        return;
-    } 
-    listElement * next = temp->nextElem->nextElem; 
+        //ask user which element to delete
+        printf("Which Element is to be deleted?\n--> ");
+        scanf("%d", &elemPosToDel);
+        if (elemPosToDel == 0 || elemPosToDel > getLenOfList(start))
+        {
+            printf("INVALID CHOICE. CHOSE A VALID ELEMENT!\n");
+            return;
+        }
 
-    printf("Löschen des Elements mit der Position: \n--> ");
-    scanf("%d", &pos);
+        listElement *previousElem = start;
 
-    // look if list is empty
-    if (*start == NULL) 
-        return; 
-  
-    // If head needs to be removed 
-    if (pos == 0) 
-    { 
-        *start = temp->nextElem;   
-        free(temp);               
-        return; 
-    } 
-  
-    // Find previous node of the node to be deleted 
-    for (int i=0; temp!=NULL && i<pos-1; i++) 
-        temp = temp->nextElem; 
-  
-    // If position is more than number of nodes 
-    if (temp == NULL || temp->nextElem == NULL) 
-        return; 
-  
-    // Unlink the node from linked list 
-    free(temp->nextElem);  
-  
-    temp->nextElem = next;  
+        //get element before elemPosToDel
+        for (int i = 1; i < elemPosToDel; i++)
+        {
+            previousElem = previousElem->nextElem;
+        }
+
+        //coppel element before elemPosToDel to elem after elemPosToDel 
+        listElement *elemDelet = previousElem->nextElem;
+        listElement *elemToCoppel = previousElem->nextElem->nextElem;
+        previousElem->nextElem = elemToCoppel;
+
+        //free storage
+        free(elemDelet);
+    }
     /* ---------------*/
-
 }
 
-void delList(listElement **start){
+void delList(listElement *start)
+{
 
     /* YOUR CODE HERE */
-    listElement * prev = * start;
-    
-    //free the memory of every element
-    while (*start)
-    {
-        *start = (*start)->nextElem;
-        free(prev);
-        prev = *start;
-    }
+    listElement * prev;
+    listElement * currentElement = start;
+    int lenOfList = getLenOfList(start);
 
+    if (currentElement->nextElem==NULL)
+    {
+        printf("LIST IS ALREADY EMPTY!\n\n");
+        return;
+    }
+    
+    listElement *elemDelet;
+    listElement *elemToCopel;
+
+    //free the memory of every element
+    for (int i = 0; i < lenOfList; i++)
+    {
+        currentElement = start;
+        prev = currentElement;
+        elemDelet = prev->nextElem;
+        elemToCopel = prev->nextElem->nextElem;
+        prev->nextElem = elemToCopel;
+
+        free(elemDelet);
+    }
+    
     printf("List successfully deleted!\n\n");
     /* ---------------*/
 }
 
-int getLenOfList(listElement *start){ // we use this for save list fcn
+int getLenOfList(listElement *start)
+{ // we use this for save list fcn
 
     int counter = 0;
-    listElement * currElem = start;
-    while (currElem->nextElem != NULL) {// get last elem in list
-        currElem = currElem->nextElem; counter++;
-        }
+    listElement *currElem = start;
+    while (currElem->nextElem != NULL)
+    { // get last elem in list
+        currElem = currElem->nextElem;
+        counter++;
+    }
     return counter;
 }
 
-void saveList(listElement *start){
+void saveList(listElement *start)
+{
 
     /* YOUR CODE HERE */
     char filename[50];
     int counter;
+    char txtFile[] = ".txt";
     FILE *f;
-    listElement * currElem = start;
+    listElement *currElem = start;
 
-    printf("Enter the filename to open for saving the linkedList \n e.g. '*.txt' --> ");
+    printf("Enter the filename to open for saving the linkedList \n'*.txt'--> ");
     scanf("%s", filename);
 
+    //build filename
+    strcat(filename, txtFile);
+
     f = fopen(filename, "w");
-
-    counter=getLenOfList(start);
-
-    //if filepointer is not NULL then print all elements of the list in the .txt file
-    if (f == NULL) {
-        printf("Error with filePointer\n");
-    } else
+    if (f == NULL)
     {
-        currElem = currElem->nextElem;
+        printf("\nUNABLE TO OPEN FILE, PLEASE TRY AGAIN!\n\n");
+        return;
+    }
 
-        for (int i = 0; i < counter; i++)
-        {
-            fprintf(f, "%s %s %d\n", currElem->lastName, currElem->firstName,currElem->age);
-            currElem=currElem->nextElem;
-        }
+    //check if list is empty
+    if (currElem==NULL)
+    {
+        fclose(f);
+        printf("LIST IS EMPTY\n\n");
+    }
+    
+    currElem = currElem->nextElem;
+
+    //counter for print to work
+    counter = getLenOfList(start);
+    for (int i = 0; i < counter; i++)
+    {
+        fprintf(f, " %s %s %d\n", currElem->lastName, currElem->firstName, currElem->age);
+        currElem = currElem->nextElem;
     }
 
     fclose(f);
     /* ---------------*/
 }
 
-void loadList(listElement *start){
-	
+void loadList(listElement *start)
+{
+
     /* YOUR CODE HERE */
     char filename[50];
-    FILE *f;
-    listElement * currElem = start;
+    char txtFile[] = ".txt";
 
     system("ls *.txt");
 
-    printf("Enter the filename to open for reading in the linkedList:\n--> ");
+    printf("Enter the filename to open for reading in the linkedList:\n'*.txt'--> ");
     scanf("%s", filename);
 
-    f = fopen(filename, "r");
+    //build filename
+    strcat(filename, txtFile);
 
-    while(!feof(f)) //Check for file end
+    FILE *f;
+    f = fopen(filename, "r");
+    if (f == NULL)
+    {
+        printf("\nUNABLE TO OPEN FILE, PLEASE TRY AGAIN!\n\n");
+        return;
+    }
+
+    while (fgetc(f) != EOF) //Check for file end, no whitespaces
     {
         //creating new list element, siehe addListElem function
-        listElement * new;
+        listElement *new;
         new = (listElement *)malloc(sizeof(listElement));
-        if (new == NULL) {
-            printf("can't reserve storage.\n"); 
+        if (new == NULL)
+        {
+            printf("can't reserve storage.\n");
             return;
         }
 
-        listElement * currElem = start;
-        while (currElem->nextElem != NULL) currElem = currElem->nextElem;// get last elem in list
-        currElem->nextElem = new; // add new to the end of list
+        listElement *currElem = start;
+        while (currElem->nextElem != NULL)
+            currElem = currElem->nextElem; // get last elem in list
+        currElem->nextElem = new;          // add new to the end of list
         new->nextElem = NULL;
 
-        //scan document and transfer information to new element, till EOF
-        if(fscanf(f, "%s %s %d", new->lastName, new->firstName, &new->age) == EOF) {
-            break;
-        }
-    }
+        char ageAsString[50], lastname[50], firstname[50];
+        int age;
+
+        //scan document and transfer information to new variable
+        fscanf(f, "%s", lastname);
+        fscanf(f, "%s", firstname);
+        fscanf(f, "%s", ageAsString);
+        age = atoi(ageAsString);
+        //convert to int
+        strcpy(new->lastName, lastname);
+        strcpy(new->firstName, firstname);
+        new->age=age;
+    }    
     
+    //delete last element, siehe code delListElem
+    int elemPos = getLenOfList(start);
+    listElement *previousElem = start;
+
+    for (int i = 1; i < elemPos; i++)
+    {
+        previousElem = previousElem->nextElem;
+    }
+
+    listElement *elemDelet = previousElem->nextElem;
+    listElement *elemToCopel = previousElem->nextElem->nextElem;
+    previousElem->nextElem = elemToCopel;
+
+    free(elemDelet);
+
+    //close file
     fclose(f);
     /* ---------------*/
 
-	printf("loading data will be append to current list...\n");
-	printList(start); // show loaded list
+    printf("loading data will be append to current list...\n");
+    printList(start); // show loaded list
 }
 
-void exitFcn(listElement *start){
+void exitFcn(listElement *start)
+{
 
     printf("\n>> exitFcn fcn is tbd.\n\n");
-
 }
 
-void sortList(listElement *start){
-	
-	printf("\n>>sortList fcn is tbd.\n\n");
-    
+void sortList(listElement *start)
+{
+
+    printf("\n>>sortList fcn is tbd.\n\n");
 }
 
-void stringToLower(char *string) {
-	
+void stringToLower(char *string)
+{
+
     printf("\n>>stringToLower fcn is tbd.\n\n");
-
 }
-
-
-
-
-
