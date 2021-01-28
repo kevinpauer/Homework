@@ -39,13 +39,19 @@ void eulerSettings_MSD(simHandle* handle){
     /*get user defined Simtime*/
     printf("Simtime (in s): \n");
     scanf("%lf", &handle->simTime);
+    if (handle->simTime<=0)
+    {
+        printf("A Simtime of %lf is not allowed! Pleas choose a Simtime greater than 0.\n", handle->simTime);
+        return;
+    }
+    
 
     /*get user defined StepSize*/
     printf("StepSize (in s): \n");
     scanf("%lf", &handle->stepSize);
-    if (handle->stepSize==0)
+    if (handle->stepSize<=0)
     {
-        printf("A STEPSIZE OF 0 IS NOT ALLOWED, PLEASE TRY AGAIN!\n");
+        printf("A StepSize of %lf is not allowed! Please choose a StepSize greater than 0.\n", handle->stepSize);
         return;
     }
 
@@ -109,9 +115,10 @@ void showResults_MSD(simHandle* handle){
         printf("Fehler beim öffnen der Datei!\n");
         return;
     }
-    
-    double lenOfSim=(int)ceil(handle->simTime/handle->stepSize);
-    for (int i = 0; i < lenOfSim; i++)
+
+    /*sizeOfSim is equivalent to the needed number of lines in the txt document */
+    double sizeOfSim=(int)ceil(handle->simTime/handle->stepSize);
+    for (int i = 0; i < sizeOfSim; i++)
     {
         fprintf(fp, "%lf %lf %lf\n", handle->stepSize*i, handle->stateVec[i*NUMOFSTATES], handle->stateVec[i*NUMOFSTATES+1]);   
     }
@@ -131,6 +138,6 @@ void showResults_MSD(simHandle* handle){
     /*visualize results in gnuplot*/
     fprintf(gnuplotPipe, "plot 'simData.txt' using 1:2 title 'pos' with lines, '' using 1:3 title 'v' with lines\n");
 
+    /*close pipe*/
     pclose(gnuplotPipe);
-
 }
